@@ -212,7 +212,7 @@ class PlatformFL(Platform):
             else:
                 cache_config.block_size = 16
         if cls.device_type == "npu":
-            from vllm_fl.dispatch.backends.vendor.ascend.patch import refresh_block_size
+            from vllm_fl.dispatch.backends.vendor.ascend.fl_patch import refresh_block_size
 
             refresh_block_size(vllm_config)
 

@@ -1,5 +1,5 @@
 # Copyright (c) 2026 BAAI. All rights reserved.
-# Adapted from https://github.com/vllm-project/vllm-ascend/blob/main/vllm_ascend/ops/triton/mamba/causal_conv1d.py
+# Adapted from https://github.com/vllm-project/vllm-plugin-FL/blob/main/fl_ascend/ops/triton/mamba/causal_conv1d.py
 # adapted from vllm/model_executor/layers/mamba/ops/causal_conv1d.py
 # Adapted from https://github.com/vllm-project/vllm/blob/main/vllm/model_executor/layers/mamba/ops/causal_conv1d.py
 # SPDX-License-Identifier: Apache-2.0

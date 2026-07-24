@@ -1,5 +1,5 @@
 # Copyright (c) 2026 BAAI. All rights reserved.
-# Adapted from https://github.com/vllm-project/vllm-ascend/blob/v0.13.0rc1/vllm_ascend/attention/attention_v1.py
+# Adapted from https://github.com/vllm-project/vllm-plugin-FL/blob/v0.13.0rc1/fl_ascend/attention/attention_v1.py
 # Below is the original copyright:
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-FileCopyrightText: Copyright (c) 2025 Huawei Technologies Co., Ltd.
@@ -8,7 +8,7 @@
 Ascend NPU native attention backend for vllm-plugin-FL.
 
 This module provides native Ascend NPU attention implementation using torch_npu
-operators directly, without depending on vllm-ascend package.
+operators directly, without depending on vllm-plugin-FL package.
 
 Core operators used:
 - torch_npu.npu_fused_infer_attention_score: For prefill/chunked-prefill
@@ -52,7 +52,7 @@ try:
     _TORCH_NPU_AVAILABLE = True
 
     # NPU compatibility: Replace torch.Event and torch.cuda.Stream with NPU versions
-    # This is similar to vllm-ascend's _torch_cuda_wrapper approach
+    # This is similar to vllm-plugin-FL's _torch_cuda_wrapper approach
     if hasattr(torch, "npu") and torch.npu.is_available():
         torch.Event = torch.npu.Event
         torch.cuda.Event = torch.npu.Event

@@ -93,8 +93,52 @@ def _patch_custom_ops():
     register_op_schemas()
 
 
+def _is_ascend_environment():
+    """Return True only on an Ascend NPU host with the vendored Ascend stack.
+
+    The FL plugin vendors the Ascend DeepSeek-V4 stack under
+    ``vllm_fl.dispatch.backends.vendor.ascend`` (NPU platform, DeepSeek-V4 model, DSA sparse
+    attention, msmodelslim w8a8 quantization). Preconditions are checked with
+    ``importlib.util.find_spec()`` so we never import torch_npu merely to make
+    the decision, and we do NOT depend on the external Ascend plugin package.
+    The final confirmation (``torch.npu.is_available()``) is guarded: any
+    failure (no NPU driver, import error, missing packages, ...) makes this
+    return False so the normal FL code path is used unchanged.
+    """
+    try:
+        import importlib.util
+        if importlib.util.find_spec("torch_npu") is None:
+            return False
+        if importlib.util.find_spec("vllm_fl.dispatch.backends.vendor.ascend") is None:
+            return False
+        import torch
+        import torch_npu  # noqa: F401
+        return bool(torch.npu.is_available())
+    except Exception:
+        return False
+
+
 def register():
     """Register the FL platform."""
+    if _is_ascend_environment():
+        # Ascend host with the vendored Ascend stack present: activate the
+        # vendored NPU platform so the model runs exactly like the working
+        # baseline (NPUPlatform + ascend quant configs + Ascend DeepSeek-V4/MTP
+        # models, all applied via
+        # NPUPlatform.pre_register_and_update()/check_and_update_config()).
+        # No dependency on the external Ascend plugin package.
+        multiproc_method = os.environ.get("VLLM_WORKER_MULTIPROC_METHOD")
+        if multiproc_method is None:
+            os.environ["VLLM_WORKER_MULTIPROC_METHOD"] = "spawn"
+        try:
+            from vllm_fl.dispatch.backends.vendor.ascend import register as _ascend_register
+            return _ascend_register()
+        except Exception as e:
+            logger.warning(
+                "Vendored Ascend register() failed on Ascend host (%s); "
+                "falling back to FL platform registration.", e
+            )
+
     _patch_custom_ops()
     _patch_flash_attn_import()
     _patch_transformers_compat()
@@ -136,6 +180,38 @@ def register_router():
 
 def register_model():
     """Register FL-specific models not yet upstream."""
+    if _is_ascend_environment():
+        # Delegate model registration to the vendored Ascend stack (Ascend
+        # DeepSeek-V4 / DeepSeekV4MTP models, hunyuan compat shim, etc.) on
+        # Ascend hosts. No dependency on the external Ascend plugin package.
+        try:
+            # Replicate the vendored Ascend stack's general-plugin behavior.
+            # Upstream registers FOUR general plugins (ascend_kv_connector,
+            # ascend_model_loader, ascend_service_profiling, ascend_model); the
+            # first three each call _ensure_global_patch() ->
+            # adapt_patch(is_global_patch=True), which installs the process-wide
+            # vLLM monkey-patches (speculative-config rewrite, fused_moe,
+            # kv-cache coordinator, distributed, structured output, ...).
+            # load_general_plugins() runs in EVERY process (process0, engine
+            # core, workers). Under VLLM_PLUGINS=fl those ascend_* entries are
+            # filtered out, leaving this as the only general plugin, so we must
+            # trigger the global patch here or workers/engine-core would run
+            # WITHOUT the runtime patches the baseline relies on.
+            # _ensure_global_patch() is guarded by _GLOBAL_PATCH_APPLIED and
+            # adapt_patch is an idempotent module import, so calling it in a
+            # process where NPUPlatform.pre_register_and_update() already ran
+            # (process0) is a harmless no-op.
+            from vllm_fl.dispatch.backends.vendor.ascend import _ensure_global_patch
+            _ensure_global_patch()
+            from vllm_fl.dispatch.backends.vendor.ascend import register_model as _ascend_register_model
+            _ascend_register_model()
+            return
+        except Exception as e:
+            logger.warning(
+                "Vendored Ascend register_model() failed on Ascend host (%s); "
+                "falling back to FL model registration.", e
+            )
+
     from vllm import ModelRegistry
 
     _register_flagcx_connector()
@@ -164,7 +240,7 @@ def register_model():
     except Exception as e:
         logger.error(f"Register DeepseekV4 model error: {str(e)}")
 
-    
+
     # Register DeepseekV4 model
     try:
         ModelRegistry.register_model(

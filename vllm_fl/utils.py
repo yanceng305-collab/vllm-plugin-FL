@@ -4,14 +4,24 @@ import json
 import os
 from typing import Optional, Tuple
 
-import flag_gems
+# FlagGems is optional at import time. On Ascend the plugin delegates to
+# vllm-plugin-FL and does not require FlagGems; making these imports tolerant
+# lets `import vllm_fl` succeed in environments without FlagGems installed.
 try:
-    # FlagGems<=5.0.2: DeviceDetector lives in device.
-    from flag_gems.runtime.backend.device import DeviceDetector
-except (ImportError, FileNotFoundError):
-    # FlagGems>5.0.2: DeviceDetector lives in device_finder.
-    from flag_gems.runtime.backend.device_finder import DeviceDetector
-from flag_gems.runtime import backend
+    import flag_gems
+    try:
+        # FlagGems<=5.0.2: DeviceDetector lives in device.
+        from flag_gems.runtime.backend.device import DeviceDetector
+    except (ImportError, FileNotFoundError):
+        # FlagGems>5.0.2: DeviceDetector lives in device_finder.
+        from flag_gems.runtime.backend.device_finder import DeviceDetector
+    from flag_gems.runtime import backend
+    FLAG_GEMS_AVAILABLE = True
+except Exception:  # pragma: no cover - depends on environment
+    flag_gems = None
+    DeviceDetector = None
+    backend = None
+    FLAG_GEMS_AVAILABLE = False
 
 _OP_CONFIG: Optional[dict[str, str]] = None
 

@@ -2,7 +2,7 @@
 
 """
 Ascend rotary embedding operator implementations.
-Based on vllm-ascend official implementation.
+Based on vllm-plugin-FL official implementation.
 """
 
 from __future__ import annotations

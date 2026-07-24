@@ -121,7 +121,7 @@ def register_oot_ops(whitelist: Optional[List[str]] = None) -> None:
         # Ascend implementations that bypass the CustomOp/dispatch path.
         from vllm.platforms import current_platform
         if current_platform.device_type == "npu":
-            from vllm_fl.dispatch.backends.vendor.ascend.patch import apply_ascend_patches
+            from vllm_fl.dispatch.backends.vendor.ascend.fl_patch import apply_ascend_patches
             apply_ascend_patches()
 
         # Apply Sunrise/PTPU monkey-patches if running on PTPU.

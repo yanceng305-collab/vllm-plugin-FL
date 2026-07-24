@@ -132,7 +132,7 @@ class AscendBackend(Backend):
         instead of flag_gems operators.
 
         Uses vllm_fl's native Ascend implementation which directly calls
-        torch_npu operators without depending on vllm-ascend package.
+        torch_npu operators without depending on vllm-plugin-FL package.
 
         Args:
             use_mla: Whether to use Multi-head Latent Attention (MLA)

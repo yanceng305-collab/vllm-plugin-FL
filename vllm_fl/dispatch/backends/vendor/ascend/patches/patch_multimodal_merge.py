@@ -14,7 +14,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# This file is a part of the vllm-ascend project.
+# This file is a part of the vllm-plugin-FL project.
 
 import torch
 from vllm.model_executor.models.utils import (_embedding_count_expression,
