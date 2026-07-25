@@ -23,6 +23,7 @@ from vllm.model_executor.models.qwen3_5 import Qwen3_5DecoderLayer
 from vllm.model_executor.models.qwen3_next import Qwen3NextAttention
 
 from vllm_fl.dispatch.backends.vendor.ascend.ascend_forward_context import _EXTRA_CTX
+from vllm_fl.dispatch.backends.vendor.ascend.utils import enable_custom_op
 
 
 class AscendQwen3NextAttention(Qwen3NextAttention):
@@ -137,3 +138,23 @@ class AscendQwen3_5DecoderLayer(Qwen3_5DecoderLayer):
 
 Qwen3_5DecoderLayer.forward = AscendQwen3_5DecoderLayer.forward
 Qwen3NextAttention.forward = AscendQwen3NextAttention.forward
+
+
+# Eagerly enable the Ascend custom ops during model construction, BEFORE any
+# torch.compile / ACL-graph capture. This mirrors the DeepSeek-V4 model
+# ``__init__`` fix: once ``_CUSTOM_OP_ENABLED`` is set here, the
+# ``enable_custom_op()`` calls inside the norm ``forward_oot`` (and elsewhere)
+# short-circuit at their ``if _CUSTOM_OP_ENABLED is not None`` guard during
+# Dynamo tracing and never reach the ``@torch._dynamo.disable``'d
+# ``load_ascend_kernels()``, which Dynamo cannot trace (it would raise
+# ``Unsupported: Skip calling torch.compiler.disable()'d function``). The call
+# is idempotent, so running it in every decoder-layer ``__init__`` is harmless.
+_qwen3_5_decoder_init = Qwen3_5DecoderLayer.__init__
+
+
+def _ascend_qwen3_5_decoder_init(self, *args, **kwargs):
+    _qwen3_5_decoder_init(self, *args, **kwargs)
+    enable_custom_op()
+
+
+Qwen3_5DecoderLayer.__init__ = _ascend_qwen3_5_decoder_init

@@ -105,7 +105,16 @@ class AscendGemmaRMSNorm(GemmaRMSNorm):
                 x, _, residual = torch_npu.npu_add_rms_norm(x, residual, 1.0 + self.weight, self.variance_epsilon)
             return x, residual
 
-        x, _ = torch.ops._C_ascend.npu_gemma_rms_norm(x, self.weight, self.variance_epsilon)
+        # GemmaRMSNorm scales the normalized output by (1 + weight). The
+        # dedicated ``npu_gemma_rms_norm`` C-op is not present in every
+        # ``libfl_ascend_ops.so`` build (e.g. the DeepSeek-V4-vendored one), so
+        # express it through the standard ``npu_rms_norm`` with the same
+        # (1 + weight) adjustment used in the residual branch above. Use the
+        # fused C-op only when it is actually registered.
+        if enable_custom_op() and hasattr(torch.ops._C_ascend, "npu_gemma_rms_norm"):
+            x, _ = torch.ops._C_ascend.npu_gemma_rms_norm(x, self.weight, self.variance_epsilon)
+        else:
+            x, _ = torch_npu.npu_rms_norm(x, 1.0 + self.weight, self.variance_epsilon)
         return x
 
 
