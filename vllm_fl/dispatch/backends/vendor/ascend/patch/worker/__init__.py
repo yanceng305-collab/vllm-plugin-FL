@@ -51,6 +51,7 @@ import vllm_fl.dispatch.backends.vendor.ascend.patch.worker.patch_draft_quarot  
 import vllm_fl.dispatch.backends.vendor.ascend.patch.worker.patch_cudagraph  # noqa
 import vllm_fl.dispatch.backends.vendor.ascend.patch.worker.patch_deepseek_mtp  # noqa
 import vllm_fl.dispatch.backends.vendor.ascend.patch.worker.patch_gqa_c8  # noqa
+import vllm_fl.dispatch.backends.vendor.ascend.patch.worker.patch_glm_moe_dsa  # noqa
 
 if _V2_MODEL_RUNNER_SUPPORTED:
     import vllm_fl.dispatch.backends.vendor.ascend.patch.worker.patch_v2.patch_uva  # noqa
