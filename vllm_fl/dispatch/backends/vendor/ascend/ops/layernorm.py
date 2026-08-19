@@ -19,9 +19,73 @@ import torch
 from torch import nn
 from vllm.config import get_current_vllm_config
 from vllm.model_executor.layers.layernorm import GemmaRMSNorm, RMSNorm, RMSNormGated
+from vllm.utils.torch_utils import direct_register_custom_op
 
 from vllm_fl.dispatch.backends.vendor.ascend.ops.triton.layernorm_gated import layer_norm_fwd_npu
 from vllm_fl.dispatch.backends.vendor.ascend.utils import enable_custom_op, get_weight_prefetch_method
+
+
+def _ascend_rms_norm_gated_impl(
+    x: torch.Tensor,
+    weight: torch.Tensor,
+    bias: torch.Tensor | None,
+    z: torch.Tensor | None,
+    eps: float,
+    group_size: int,
+    norm_before_gate: bool,
+) -> torch.Tensor:
+    """Run the Triton gated RMSNorm behind an opaque dispatcher boundary.
+
+    Keeping the Triton launch out of the Dynamo graph prevents Inductor's
+    ``triton_kernel_wrapper_mutation`` node from entering the model AOT cache.
+    The implementation and launch geometry remain unchanged at runtime.
+    """
+    original_shape = x.shape
+    x = x.reshape(-1, x.shape[-1])
+    if x.stride(-1) != 1:
+        x = x.contiguous()
+
+    if z is not None:
+        if z.shape != original_shape:
+            raise ValueError(f"Expected z shape {original_shape}, got {z.shape}")
+        z = z.reshape(-1, z.shape[-1])
+        if z.stride(-1) != 1:
+            z = z.contiguous()
+
+    weight = weight.contiguous()
+    if bias is not None:
+        bias = bias.contiguous()
+
+    y, _, _ = layer_norm_fwd_npu(
+        x,
+        weight,
+        bias,
+        eps,
+        z=z,
+        group_size=group_size,
+        norm_before_gate=norm_before_gate,
+        is_rms_norm=True,
+    )
+    return y.reshape(original_shape)
+
+
+def _ascend_rms_norm_gated_fake(
+    x: torch.Tensor,
+    weight: torch.Tensor,
+    bias: torch.Tensor | None,
+    z: torch.Tensor | None,
+    eps: float,
+    group_size: int,
+    norm_before_gate: bool,
+) -> torch.Tensor:
+    return torch.empty_like(x)
+
+
+direct_register_custom_op(
+    op_name="ascend_rms_norm_gated",
+    op_func=_ascend_rms_norm_gated_impl,
+    fake_impl=_ascend_rms_norm_gated_fake,
+)
 
 
 class AscendRMSNorm(RMSNorm):
@@ -205,4 +269,13 @@ class AscendRMSNormGated(RMSNormGated):
 
     def forward_oot(self, x, z=None):
         """If z is not None, we do norm(x) * silu(z) if norm_before_gate, else norm(x * silu(z))"""
-        return LayerNormFn.apply(x, self.weight, self.bias, z, self.eps, self.group_size, self.norm_before_gate, True)
+        group_size = self.group_size if self.group_size is not None else self.weight.shape[0]
+        return torch.ops.vllm.ascend_rms_norm_gated(
+            x,
+            self.weight,
+            self.bias,
+            z,
+            self.eps,
+            group_size,
+            self.norm_before_gate,
+        )
