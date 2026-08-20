@@ -102,6 +102,27 @@
 - 证据要求：保存容器创建命令、image digest、`docker inspect`、device/mount、卸载/安装日志、容器内 package 版本和 FL git 状态，并纳入 Stage 0 artifact/SHA256。
 - 不变边界：该 bootstrap 不改变 Stage 0 的模型技术目标、五项 shared Indexer 不变量、eager 禁用项或停止等待验收要求。
 
+## D-013：Stage 0 Draft PR #1 验收结论为 NEEDS-FIX
+
+- 状态：Accepted
+- 日期：2026-08-20
+- 触发阶段：Stage 0 / [Draft PR #1](https://github.com/yanceng305-collab/vllm-plugin-FL/pull/1)
+- 结论：PR #1 未达到 Stage 0 完成标准，只允许补充/修正 Stage 0 证据；Stage 1 仍未授权。
+- 已通过部分：base/head 和 Draft PR 关系正确；17 个变更文件均位于 `docs/glm52-w8a8-stage0/`；未修改生产源码；image digest、device/mount、`vllm-ascend` 卸载和 FL SHA 安装证据基本齐全；首个根错误定位正确。
+- 根错误：eager 日志在 vLLM core `deepseek_v2.py:985` 为 layer 3 创建 Indexer，随后 ModelSlim `modelslim_config.py:330` 查询 checkpoint 中不存在的 `model.layers.3.self_attn.indexer.wq_b.weight` 并抛出 `KeyError`。错误发生在模型构造期间，后续 EngineCore/API server 异常是下游噪声。
+- Matrix 修正：第 1 项可保留 EXISTING，但证据必须改为实际 vLLM core `DeepseekV2Model`；第 2 项应为 MISSING/INCOMPATIBLE；第 3 项应为 INCOMPATIBLE；第 4 项至少为 PARTIAL/UNVERIFIED，不能声称实际 GLM 路径已完成 owner-write/shared-read；第 5 项只能按实际 generic GLM/MTP 路径给出静态证据并标明运行时未验证。DeepSeek-V4 vendored model 不能替代实际 GLM 调用链证据。
+- 额外缺口：日志明确显示 async scheduling、prefix caching 和 chunked prefill 为 enabled；checkpoint repo/revision、完整文件清单和 SHA256、config/quant description digest 未提交；`manifest.json` 容器 ID 与 `container-inspect.json` 不一致；`sha256sums.txt` 的自哈希不匹配；模型路径 `/data/czh/GLM-5.2-w8a8` 不在已记录 bind mount 中，来源/进入容器方式未证明。
+- 修正边界：只修正文档、manifest、hash 和补充复现日志；禁止生产代码改动、Stage 1 实现或扩大 PR 范围。
+
+## D-014：TP=1 证据降级为 construction-path reproduction
+
+- 状态：Accepted
+- 日期：2026-08-20
+- 触发阶段：Stage 0 / Draft PR #1
+- 决策：单台 8×64GB A2、TP=1 的当前日志只能证明模型构造路径和首个结构错误，不能称为“能容纳模型的最小运行拓扑”，也不能证明权重加载、KV 分配或推理能力。
+- 两机判断：Stage 0 不要求在构造缺口尚未修复时补跑会在同一 layer 3 提前失败的两机实验；这种运行无法验证容量。Stage 0 必须记录官方 GLM-5.2-W8A8 需要两台 Atlas 800 A2、给出 capacity-valid TP/DP/EP 计划并明确未执行。
+- 后续硬门：构造缺口修复后，任何“eager 跑通”、权重加载或稳定性验收必须先在容量有效的两机 A2 拓扑上完成；TP=1 结果不得升级为该结论。
+
 ## 后续决策模板
 
 ```markdown

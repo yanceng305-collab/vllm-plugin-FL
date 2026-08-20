@@ -2,12 +2,12 @@
 
 - 最后更新：2026-08-20（Asia/Shanghai）
 - 当前阶段：Stage 0 — 证据冻结与 eager 首错复现
-- 当前状态：任务已发布，等待 DeepSeek 开始；尚未验收
-- 执行分支：未创建；先确认 `yanceng305-collab/vllm-plugin-FL:ascend-model-migration` 与执行时读取的上游 `xiemingda-1002` HEAD 完全一致，再从该准确 SHA 在本 fork 创建 `audit/glm52-w8a8-stage0-gap`
-- Draft PR：未创建；创建后 base 必须是 `yanceng305-collab/vllm-plugin-FL:ascend-model-migration`，当前不得向 `xiemingda-1002` 创建跨 fork PR
-- 代码基线：上游和本 fork 审计时均为 `82f3e7181cda8b51b5c0de8dd3450f5e779df363`；执行前必须重新读取并比较两个远端 SHA，禁止只使用浮动分支名
-- 执行 HEAD：N/A
+- 当前状态：`NEEDS-FIX`；Stage 0 Draft PR #1 已正式审查，Stage 1 仍未授权
+- 执行分支：`audit/glm52-w8a8-stage0-gap`
+- Draft PR：[yanceng305-collab/vllm-plugin-FL#1](https://github.com/yanceng305-collab/vllm-plugin-FL/pull/1)，状态 OPEN / DRAFT，base 为本 fork `ascend-model-migration`
+- 代码基线：上游和本 fork 当前均为 `82f3e7181cda8b51b5c0de8dd3450f5e779df363`
+- 执行 HEAD：`637a54978eff7bf7fae0c6150fe7ca663b22461a`
 - 控制面基线：`main@38e7dbc20197e2db742c4e4c9687d36ea4df9900`
-- 最近验收结果：总体计划和上游/分支缺口审计已完成；Stage 0 尚无执行证据，因此没有通过结论
-- 当前已知约束：实际 NPU 拓扑、runtime 版本、checkpoint digest 和客户 benchmark 附件尚未由执行环境冻结
-- 下一动作：将 [`tasks/STAGE-0.md`](tasks/STAGE-0.md) 直接交给 DeepSeek；先同步/确认本 fork 的代码基线，再执行 0A-0：创建或严格证明可复用一个基于 `quay.io/ascend/vllm-ascend:v0.20.2rc1` 的干净 FL Ascend 容器。随后才进行环境冻结、shared Indexer 审计和最小 eager 复现
+- 最近验收结果：真实 diff 仅含 17 个 Stage 0 证据文件，未修改生产源码；容器 bootstrap 基本成立；首个根错误高置信确认为 layer 3 shared 层错误创建 Indexer 后触发 `KeyError: model.layers.3.self_attn.indexer.wq_b.weight`。但 symbol matrix 使用未执行的 DeepSeek-V4 路径，把第 2/3/4 项错误标为 EXISTING；实际 eager 配置仍启用 async scheduling、prefix caching 和 chunked prefill；checkpoint 文件/revision/digest 未冻结；artifact manifest 还存在容器 ID 和自哈希不一致。因此未通过。
+- 拓扑结论：TP=1、单机 8×64GB A2 证据只允许标为 construction-path early-error reproduction，不是可容纳 GLM-5.2-W8A8 的最小运行拓扑。Stage 0 不要求在修复构造缺口前重复同一错误的两机运行，但必须补充官方两机 A2 容量要求和未执行的 capacity-valid topology 计划；构造缺口修复后的首次 eager 验证必须使用容量有效的两机拓扑。
+- 下一动作：DeepSeek 只在同一 Draft PR #1 中执行 [`tasks/STAGE-0-FIX-1.md`](tasks/STAGE-0-FIX-1.md)，补正 Stage 0 证据和 PR 描述；不得修改生产源码、不得开始 Stage 1、不得合并
