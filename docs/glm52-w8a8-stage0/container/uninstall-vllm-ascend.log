@@ -1,0 +1,6 @@
+=== vllm-ascend uninstall log ===
+pip uninstall -y vllm-ascend
+Found existing installation: vllm_ascend 0.20.2rc1
+Successfully uninstalled vllm_ascend-0.20.2rc1
+Verified: pip show vllm-ascend -> WARNING: Package(s) not found: vllm-ascend
+Verified: import vllm_ascend -> ModuleNotFoundError

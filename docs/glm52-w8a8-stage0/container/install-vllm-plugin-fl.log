@@ -1,0 +1,31 @@
+=== vllm-plugin-FL Install Log ===
+Command: pip install -e /data/zyg/vllm-plugin-FL --no-build-isolation --no-deps
+
+Result: Successfully installed vllm-plugin-fl-0.0.0+g82f3e7181
+
+Editable project location: /data/zyg/vllm-plugin-FL
+Git SHA: 82f3e7181cda8b51b5c0de8dd3450f5e779df363
+Wheel: vllm_plugin_fl-0.0.0+g82f3e7181-0.editable-py3-none-any.whl
+
+=== pip show vllm-plugin-fl ===
+Name: vllm-plugin-fl
+Version: 0.0.0+g82f3e7181
+Summary: A vLLM plugin built on the FlagOS unified multi-chip backend
+Home-page: https://github.com/flagos-ai/vllm-plugin-FL
+License-Expression: Apache-2.0
+Location: /usr/local/python3.11.15/lib/python3.11/site-packages
+Editable project location: /data/zyg/vllm-plugin-FL
+
+=== Module Import ===
+vllm_fl path: /data/zyg/vllm-plugin-FL/vllm_fl/__init__.py
+vllm_fl version: 0.0.0+g82f3e7181
+
+=== Entry Points ===
+vllm.platform_plugins: fl = vllm_fl:register
+vllm.general_plugins: fl = vllm_fl:register_model
+
+=== Git Status ===
+HEAD: 82f3e7181cda8b51b5c0de8dd3450f5e779df363
+Branch: audit/glm52-w8a8-stage0-gap
+Remotes: origin (xiemingda-1002), yanceng (yanceng305-collab)
+Working tree: clean (only untracked docs/ directory)

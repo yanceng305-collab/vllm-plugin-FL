@@ -1,0 +1,43 @@
+# Stage 0 Git Freeze
+# Generated: 2026-08-20T03:07:17Z
+
+## Remote Configuration
+### origin (xiemingda-1002 — colleague fork)
+https://github.com/xiemingda-1002/vllm-plugin-FL.git
+### yanceng (yanceng305-collab — this fork)
+https://github.com/yanceng305-collab/vllm-plugin-FL.git
+
+## Branch & HEAD
+Local branch: audit/glm52-w8a8-stage0-gap
+Local HEAD: 82f3e7181cda8b51b5c0de8dd3450f5e779df363
+origin/ascend-model-migration: 82f3e7181cda8b51b5c0de8dd3450f5e779df363
+yanceng/ascend-model-migration: 82f3e7181cda8b51b5c0de8dd3450f5e779df363
+
+## Merge Base
+82f3e7181cda8b51b5c0de8dd3450f5e779df363 (all SHAs identical)
+
+## Full Log
+82f3e71 Fix gated RMSNorm AOT cache loading on Ascend
+
+## vLLM Core (from container image)
+vLLM Repo: https://github.com/vllm-project/vllm.git
+vLLM Tag: v0.20.2
+vLLM SHA: bc150f50299199599673614f80d12a196f377655
+vLLM Location: /vllm-workspace/vllm (editable)
+
+## vllm-ascend (from container image, UNINSTALLED for Stage 0)
+vllm-ascend Repo: https://github.com/vllm-project/vllm-ascend
+vllm-ascend Version: 0.20.2rc1
+vllm-ascend Location: /vllm-workspace/vllm-ascend (editable, UNINSTALLED)
+
+## Dockerfile vLLM Version
+VLLM_TAG=v0.20.2 (NOT v0.19.0)
+Actual runtime: v0.20.2 (git SHA bc150f50299199599673614f80d12a196f377655)
+
+## git status
+On branch audit/glm52-w8a8-stage0-gap
+Untracked files: docs/
+Working tree: clean (no production source modifications)
+
+## git diff HEAD
+(empty — no production source changes)
