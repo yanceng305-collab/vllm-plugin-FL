@@ -90,6 +90,17 @@
 - 禁止：不得仅为上传 Stage 0 日志额外搭建 GitHub Actions 或其他 artifact 基础设施。
 - 验收边界：审查者必须能够通过索引、固定路径和 SHA256确认产物身份；只有汇总或截图仍不构成证据。
 
+## D-012：Stage 0 先建立干净的 FL Ascend 容器
+
+- 状态：Accepted
+- 日期：2026-08-20
+- 触发阶段：Stage 0
+- 决策：在环境冻结、shared Indexer 审计和 eager 首错复现之前，先基于 `quay.io/ascend/vllm-ascend:v0.20.2rc1` 建立独立容器，挂载实际 NPU、driver、firmware、npu-smi 和工作目录；核对容器内 package；卸载镜像自带 `vllm-ascend`；从执行时已对齐的 `ascend-model-migration` 准确 SHA editable 安装 `vllm-plugin-FL`。
+- 参考边界：同事 Qwen3.5 文档只提供 Testing 步骤 0-2 的容器/软件搭建流程。不得照搬 Qwen TP=2、模型启动命令或 graph、async scheduling、MTP、FlashComm、multistream 等优化参数。
+- 允许复用：已有专用容器只有在证明 image digest、device/mount、`vllm-ascend` 卸载状态、实际 package 版本、FL 安装路径和代码 SHA全部一致且环境无其他实验修改后才可复用；否则必须新建。
+- 证据要求：保存容器创建命令、image digest、`docker inspect`、device/mount、卸载/安装日志、容器内 package 版本和 FL git 状态，并纳入 Stage 0 artifact/SHA256。
+- 不变边界：该 bootstrap 不改变 Stage 0 的模型技术目标、五项 shared Indexer 不变量、eager 禁用项或停止等待验收要求。
+
 ## 后续决策模板
 
 ```markdown

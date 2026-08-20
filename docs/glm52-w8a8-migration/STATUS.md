@@ -10,4 +10,4 @@
 - 控制面基线：`main@38e7dbc20197e2db742c4e4c9687d36ea4df9900`
 - 最近验收结果：总体计划和上游/分支缺口审计已完成；Stage 0 尚无执行证据，因此没有通过结论
 - 当前已知约束：实际 NPU 拓扑、runtime 版本、checkpoint digest 和客户 benchmark 附件尚未由执行环境冻结
-- 下一动作：将 [`tasks/STAGE-0.md`](tasks/STAGE-0.md) 直接交给 DeepSeek；先同步/确认本 fork 的代码基线，再在本 fork 创建 Stage 0 Draft PR。完整日志可使用现成 artifact URL，或保存在服务器固定目录并提交索引、路径和 SHA256
+- 下一动作：将 [`tasks/STAGE-0.md`](tasks/STAGE-0.md) 直接交给 DeepSeek；先同步/确认本 fork 的代码基线，再执行 0A-0：创建或严格证明可复用一个基于 `quay.io/ascend/vllm-ascend:v0.20.2rc1` 的干净 FL Ascend 容器。随后才进行环境冻结、shared Indexer 审计和最小 eager 复现
