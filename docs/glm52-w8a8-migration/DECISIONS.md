@@ -96,7 +96,8 @@
 - 日期：2026-08-20
 - 触发阶段：Stage 0
 - 决策：在环境冻结、shared Indexer 审计和 eager 首错复现之前，先基于 `quay.io/ascend/vllm-ascend:v0.20.2rc1` 建立独立容器，挂载实际 NPU、driver、firmware、npu-smi 和工作目录；核对容器内 package；卸载镜像自带 `vllm-ascend`；从执行时已对齐的 `ascend-model-migration` 准确 SHA editable 安装 `vllm-plugin-FL`。
-- 参考边界：同事 Qwen3.5 文档只提供 Testing 步骤 0-2 的容器/软件搭建流程。不得照搬 Qwen TP=2、模型启动命令或 graph、async scheduling、MTP、FlashComm、multistream 等优化参数。
+- 正式参考：本控制面内的 [`Qwen3.5-Ascend迁移方案与复现.md`](Qwen3.5-Ascend迁移方案与复现.md)。Stage 0 不再依赖服务器本地文档或历史聊天附件。
+- 参考边界：只允许使用该文档 Testing 步骤 0-2 的容器/软件搭建流程。不得照搬 Qwen TP=2、模型启动命令或 graph、async scheduling、MTP、FlashComm、multistream、prefix caching 等优化参数。
 - 允许复用：已有专用容器只有在证明 image digest、device/mount、`vllm-ascend` 卸载状态、实际 package 版本、FL 安装路径和代码 SHA全部一致且环境无其他实验修改后才可复用；否则必须新建。
 - 证据要求：保存容器创建命令、image digest、`docker inspect`、device/mount、卸载/安装日志、容器内 package 版本和 FL git 状态，并纳入 Stage 0 artifact/SHA256。
 - 不变边界：该 bootstrap 不改变 Stage 0 的模型技术目标、五项 shared Indexer 不变量、eager 禁用项或停止等待验收要求。

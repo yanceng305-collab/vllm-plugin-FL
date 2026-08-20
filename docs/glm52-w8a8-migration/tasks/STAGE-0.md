@@ -80,7 +80,7 @@ tests 或 tools 下独立的只读环境/manifest 收集脚本
 
 ### 4.1 参考范围
 
-环境搭建参考同事 `Qwen3.5-Ascend迁移方案与复现.md` 的 Testing 步骤 0-2，仅复用：
+正式环境参考资料为控制面仓库中的 [`Qwen3.5-Ascend迁移方案与复现.md`](../Qwen3.5-Ascend迁移方案与复现.md)。Stage 0 不得再依赖服务器本地副本或历史聊天附件；只允许参考该文件 Testing 步骤 0-2，并仅复用：
 
 - `quay.io/ascend/vllm-ascend:v0.20.2rc1` 基础镜像；
 - NPU device、driver、firmware、npu-smi 和工作目录挂载方式；

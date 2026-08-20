@@ -128,7 +128,7 @@ GlmMoeDsaForCausalLM
 
 目标：不修改生产源码，先建立或证明可复用一个基于 `quay.io/ascend/vllm-ascend:v0.20.2rc1` 的独立、干净、可复现 FL Ascend 容器，再冻结版本、硬件、checkpoint 和运行命令，核对 shared Indexer 五项不变量，并将第一次真实失败定位到具体调用层。
 
-容器 bootstrap 只参考同事 Qwen3.5 Ascend 迁移文档的镜像、device/mount、卸载 `vllm-ascend` 和 editable 安装流程。Qwen 的 TP=2、模型命令及 graph、async scheduling、MTP、FlashComm、multistream 等参数不适用于 GLM-5.2 Stage 0。
+容器 bootstrap 的正式环境参考是本控制面内的 [`Qwen3.5-Ascend迁移方案与复现.md`](Qwen3.5-Ascend迁移方案与复现.md)，且只允许使用其中 Testing 步骤 0-2 的镜像、device/mount、卸载 `vllm-ascend` 和 editable 安装流程。不得再依赖服务器本地副本或历史聊天附件。Qwen 的 TP=2、模型命令及 graph、async scheduling、MTP、FlashComm、multistream、prefix caching 等参数不适用于 GLM-5.2 Stage 0。
 
 详细任务：[`tasks/STAGE-0.md`](tasks/STAGE-0.md)
 
