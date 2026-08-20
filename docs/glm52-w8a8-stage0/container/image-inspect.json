@@ -1,0 +1,93 @@
+[
+    {
+        "Id": "sha256:a926b560b81785a9f820f975748a39807f0b1753675ab40ec30cb4ae3dabb71e",
+        "RepoTags": [
+            "quay.io/ascend/vllm-ascend:v0.20.2rc1"
+        ],
+        "RepoDigests": [
+            "quay.io/ascend/vllm-ascend@sha256:a926b560b81785a9f820f975748a39807f0b1753675ab40ec30cb4ae3dabb71e"
+        ],
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-06-03T16:38:03.342510633Z",
+        "Config": {
+            "Env": [
+                "PATH=/usr/local/Ascend/nnal/atb/latest/atb/cxx_abi_1/bin:/usr/local/Ascend/ascend-toolkit/latest/bin:/usr/local/Ascend/ascend-toolkit/latest/compiler/ccec_compiler/bin:/usr/local/Ascend/ascend-toolkit/latest/tools/ccec_compiler/bin:/usr/local/Ascend/cann-9.0.0/tools/show_kernel_debug_data:/usr/local/Ascend/cann-9.0.0/tools/msobjdump:/usr/local/Ascend/cann-9.0.0/bin:/usr/local/Ascend/cann-9.0.0/tools/ccec_compiler/bin:/usr/local/Ascend/cann-9.0.0/tools/profiler/bin:/usr/local/Ascend/cann-9.0.0/tools/ascend_system_advisor/asys:/usr/local/python3.11.15/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LD_LIBRARY_PATH=/usr/local/Ascend/cann-9.0.0/lib64:/usr/local/Ascend/cann-9.0.0/lib64/plugin/opskernel:/usr/local/Ascend/cann-9.0.0/lib64/plugin/nnengine:/usr/local/Ascend/cann-9.0.0/opp/built-in/op_impl/ai_core/tbe/op_tiling:/usr/local/Ascend/driver/lib64:/usr/local/Ascend/driver/lib64/common:/usr/local/Ascend/driver/lib64/driver:/usr/local/Ascend/nnal/atb/latest/atb/cxx_abi_1/lib:/usr/local/Ascend/nnal/atb/latest/atb/cxx_abi_1/examples:/usr/local/Ascend/nnal/atb/latest/atb/cxx_abi_1/tests/atbopstest:/usr/local/Ascend/ascend-toolkit/latest/tools/aml/lib64:/usr/local/Ascend/ascend-toolkit/latest/tools/aml/lib64/plugin:/usr/local/Ascend/ascend-toolkit/latest/lib64:/usr/local/Ascend/ascend-toolkit/latest/lib64/plugin/opskernel:/usr/local/Ascend/ascend-toolkit/latest/lib64/plugin/nnengine:/usr/local/Ascend/ascend-toolkit/latest/opp/built-in/op_impl/ai_core/tbe/op_tiling:/usr/local/python3.11.15/lib:",
+                "ASCEND_TOOLKIT_HOME=/usr/local/Ascend/cann-9.0.0",
+                "ASCEND_TOOLKIT_LATEST_HOME=/usr/local/Ascend/ascend-toolkit/latest",
+                "PYTHONPATH=/usr/local/Ascend/ascend-toolkit/latest/python/site-packages:/usr/local/Ascend/ascend-toolkit/latest/opp/built-in/op_impl/ai_core/tbe:/usr/local/Ascend/cann-9.0.0/python/site-packages:/usr/local/Ascend/cann-9.0.0/opp/built-in/op_impl/ai_core/tbe:",
+                "ASCEND_AICPU_PATH=/usr/local/Ascend/cann-9.0.0",
+                "ASCEND_OPP_PATH=/usr/local/Ascend/cann-9.0.0/opp",
+                "TOOLCHAIN_HOME=/usr/local/Ascend/cann-9.0.0/toolkit",
+                "ASCEND_HOME_PATH=/usr/local/Ascend/cann-9.0.0",
+                "CMAKE_PREFIX_PATH=/usr/local/Ascend/cann-9.0.0/toolkit/tools/tikicpulib/lib/cmake:/usr/local/Ascend/cann-9.0.0/lib64/cmake",
+                "ATB_HOME_PATH=/usr/local/Ascend/nnal/atb/latest/atb/cxx_abi_1",
+                "ATB_STREAM_SYNC_EVERY_KERNEL_ENABLE=0",
+                "ATB_STREAM_SYNC_EVERY_RUNNER_ENABLE=0",
+                "ATB_STREAM_SYNC_EVERY_OPERATION_ENABLE=0",
+                "ATB_OPSRUNNER_KERNEL_CACHE_LOCAL_COUNT=1",
+                "ATB_OPSRUNNER_KERNEL_CACHE_GLOABL_COUNT=5",
+                "ATB_WORKSPACE_MEM_ALLOC_ALG_TYPE=1",
+                "ATB_COMPARE_TILING_EVERY_KERNEL=0",
+                "ATB_SHARE_MEMORY_NAME_SUFFIX=",
+                "ATB_MATMUL_SHUFFLE_K_ENABLE=1",
+                "LCCL_DETERMINISTIC=0",
+                "LCCL_PARALLEL=0",
+                "DEBIAN_FRONTEND=noninteractive",
+                "SOC_VERSION=ascend910b1",
+                "TASK_QUEUE_ENABLE=1",
+                "OMP_NUM_THREADS=1"
+            ],
+            "Entrypoint": [
+                "/bin/bash",
+                "-c",
+                "    source /usr/local/Ascend/ascend-toolkit/set_env.sh &&     source /usr/local/Ascend/cann-9.0.0/share/info/ascendnpu-ir/bin/set_env.sh &&     source /usr/local/Ascend/nnal/atb/set_env.sh &&     exec \"$@\"",
+                "--"
+            ],
+            "Cmd": [
+                "/bin/bash"
+            ],
+            "WorkingDir": "/workspace",
+            "Labels": {
+                "org.opencontainers.image.version": "22.04"
+            },
+            "ArgsEscaped": true,
+            "Shell": [
+                "/bin/bash",
+                "-c"
+            ]
+        },
+        "Architecture": "arm64",
+        "Os": "linux",
+        "Size": 6577766251,
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:caa9956c50e9facf65021733bc7890b61ce94076388533506c80c8ae1b603db4",
+                "sha256:1c4cd041a3ee7fecd901028a08ed5c2915c4bac79c53aa90f142f447757f8f84",
+                "sha256:c577de18433aa406b226dfc42ebf6b7b78db16fdd36dec2bfec42e025c1976d1",
+                "sha256:9878168cba2dd4e939d1195d9dcff9dcd6058c95692d406cae5b7acc172e8749",
+                "sha256:5fb7ac84837dfca7947cd7068539f8cb4240424169217163c0a2a7bdb99bf6dc",
+                "sha256:f829687799251922b64d9a0976fe5b908a62c026ce32f36d3b8e3715a3a108d7",
+                "sha256:5ab7174a124a27497f331702fa5640415d7182f1765721021c2b51667515aa3a",
+                "sha256:dffd7eac2d16cda3d65647667d4469bccf77d8b36b4ec9abc82845e20172e907",
+                "sha256:1e51146b12dc32a218dd7bd73da837337883124d4c89e38ebbd2554ae9fd4733",
+                "sha256:5ff4815e6ac710d7e793d26606b3f91f37f042658c8d6fbe63cf37cf4677c464",
+                "sha256:51ad9fc2a6607393d41052cf2cbb16050374cc3b0327e468df415aa167c70d25",
+                "sha256:c47a13029edd2d7a9dc45f8055d70e23bae5b1e1f0f2b3a98aa7c9f1ce310562",
+                "sha256:7eecc66dc726192d2fbd6ff82dedeb8218b3da7d65f4e78914b276425d86aa69",
+                "sha256:90c5491c6adbbfa9e54f856628861c6ec847d8d463daea8a46fcbef50fee6258",
+                "sha256:b6d037bc989a41d9ebda9443aeb8e8a5362ecbc833fcdf3b7b037b79aa8a26e8",
+                "sha256:9108990c984e1a02841502a23f0968f7073f33fc6ce030a6beed2d02bb03385e"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-08-20T03:06:46.817906592Z"
+        },
+        "Descriptor": {
+            "mediaType": "application/vnd.docker.distribution.manifest.list.v2+json",
+            "digest": "sha256:a926b560b81785a9f820f975748a39807f0b1753675ab40ec30cb4ae3dabb71e",
+            "size": 685
+        }
+    }
+]

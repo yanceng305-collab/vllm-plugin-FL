@@ -1,0 +1,38 @@
+# Stage 0 Environment Freeze (Container-Based)
+# Generated: 2026-08-20T03:07:17Z
+
+## Python
+Python 3.11.15
+/usr/local/python3.11.15/bin/python3
+
+## OS & Kernel (Container)
+Linux S900K3-46 5.15.0-25-generic #25-Ubuntu SMP Wed Mar 30 15:57:31 UTC 2022 aarch64 aarch64 aarch64 GNU/Linux
+
+## Container Image
+Image: quay.io/ascend/vllm-ascend:v0.20.2rc1
+Image ID: sha256:a926b560b81785a9f820f975748a39807f0b1753675ab40ec30cb4ae3dabb71e
+RepoDigest: quay.io/ascend/vllm-ascend@sha256:a926b560b81785a9f820f975748a39807f0b1753675ab40ec30cb4ae3dabb71e
+Container Name: fl_stage0_audit
+Container ID: bef74a51a808eb161152b202bfb44d273097ac88015d60bd2844e061b1efa82d
+
+## Core Package Versions
+vLLM: 0.20.2+empty (git SHA bc150f50299199599673614f80d12a196f377655)
+torch: 2.10.0+cpu
+torch_npu: 2.10.0
+triton_ascend: 3.2.1
+transformers: 5.5.3
+vllm-plugin-FL: 0.0.0+g82f3e7181 (git SHA 82f3e7181cda8b51b5c0de8dd3450f5e779df363)
+
+## CANN Stack
+CANN toolkit: 9.0.0
+Driver: 26.0.rc1
+Firmware: host-mounted
+npu-smi: 26.0.rc1
+
+## NPU
+Model: Ascend 910B3
+Count: 8
+Per-card HBM: 65536 MB (64 GB)
+
+## vllm-ascend
+Status: UNINSTALLED

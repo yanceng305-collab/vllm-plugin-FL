@@ -1,0 +1,33 @@
+# Stage 0 Container: Devices and Mounts
+# Generated: 2026-08-20T03:07:17Z
+
+## Image Identity
+Image: quay.io/ascend/vllm-ascend:v0.20.2rc1
+Image ID: sha256:a926b560b81785a9f820f975748a39807f0b1753675ab40ec30cb4ae3dabb71e
+RepoDigest: quay.io/ascend/vllm-ascend@sha256:a926b560b81785a9f820f975748a39807f0b1753675ab40ec30cb4ae3dabb71e
+Container ID: bef74a51a808eb161152b202bfb44d273097ac88015d60bd2844e061b1efa82d
+Container Name: fl_stage0_audit
+
+## Devices
+/dev/davinci0 -> /dev/davinci0 (rwm)
+/dev/davinci1 -> /dev/davinci1 (rwm)
+/dev/davinci2 -> /dev/davinci2 (rwm)
+/dev/davinci3 -> /dev/davinci3 (rwm)
+/dev/davinci4 -> /dev/davinci4 (rwm)
+/dev/davinci5 -> /dev/davinci5 (rwm)
+/dev/davinci6 -> /dev/davinci6 (rwm)
+/dev/davinci7 -> /dev/davinci7 (rwm)
+/dev/davinci_manager -> /dev/davinci_manager (rwm)
+/dev/devmm_svm -> /dev/devmm_svm (rwm)
+/dev/hisi_hdc -> /dev/hisi_hdc (rwm)
+
+## Mounts (Binds)
+/usr/local/Ascend/driver -> /usr/local/Ascend/driver
+/usr/local/Ascend/firmware -> /usr/local/Ascend/firmware
+/usr/local/sbin/npu-smi -> /usr/local/sbin/npu-smi
+/data/zyg -> /data/zyg
+
+## Network/IPC/Privileged
+NetworkMode: host
+IpcMode: host
+Privileged: true

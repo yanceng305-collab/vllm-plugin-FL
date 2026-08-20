@@ -1,0 +1,37 @@
+# Stage 0 Container: Package Versions (Verified)
+# Generated: 2026-08-20T03:07:17Z
+
+## Core Packages
+Python: 3.11.15
+vLLM: 0.20.2+empty (editable @ /vllm-workspace/vllm, git SHA bc150f50299199599673614f80d12a196f377655)
+torch: 2.10.0+cpu
+torch_npu: 2.10.0
+triton_ascend: 3.2.1
+transformers: 5.5.3
+vllm-plugin-FL: 0.0.0+g82f3e7181 (editable @ /data/zyg/vllm-plugin-FL, git SHA 82f3e7181cda8b51b5c0de8dd3450f5e779df363)
+
+## CANN Stack
+CANN toolkit: 9.0.0 (/usr/local/Ascend/cann-9.0.0)
+Driver: 26.0.rc1
+Firmware: (mounted from host)
+npu-smi: 26.0.rc1
+
+## NPU Hardware
+Model: Ascend 910B3
+Count: 8
+HBM per card: 65536 MB (64 GB)
+Total HBM: 524288 MB (512 GB)
+
+## vllm-ascend Status
+UNINSTALLED (confirmed: pip show returns nothing, import vllm_ascend raises ModuleNotFoundError)
+
+## vllm-plugin-FL Status
+Installed: 0.0.0+g82f3e7181
+Editable project location: /data/zyg/vllm-plugin-FL
+Entry points:
+  vllm.platform_plugins: fl = vllm_fl:register
+  vllm.general_plugins: fl = vllm_fl:register_model
+
+## Dockerfile vLLM Version
+Repo Dockerfile: VLLM_TAG=v0.20.2 (NOT v0.19.0)
+Actual runtime: v0.20.2 (git SHA bc150f50299199599673614f80d12a196f377655)

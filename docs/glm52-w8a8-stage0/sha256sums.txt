@@ -1,0 +1,16 @@
+b06cde0ef18218f70e3853d2194343d111b6c53ecaaec48c2e3b10d3685ee19f  ./container/container-inspect.json
+efb5dd8936f34aa8b8b741e51bc36956648f349855fca7105123e25aeefc985d  ./container/create-command.sh
+86545fb3074187918c231756318af636777e1018ee54934ed244b4754c58a892  ./container/devices-and-mounts.txt
+3c9129a0d2bb2fa5cb361925e12c8063aa0f1d1d544054220eb530bf5da16e5e  ./container/image-inspect.json
+e70a7fe953f9321fd27404116bbd8826b529520a5444ce7ccee65c09e44150d9  ./container/install-vllm-plugin-fl.log
+9137145cf69f6ce7d7117a3ee23c9bcc89678bb26cdf6b1415842b4b3f5344f4  ./container/package-versions.txt
+7056bb3a7a077c8d09ebcd67340fe09b61c6fc92b88bc599096f11eac412e65b  ./container/uninstall-vllm-ascend.log
+f1c99ac3c9341d347181c76247c304bc4bdbb8dbb536a70751b2b0d9465e2d4c  ./eager-reproduction.md
+d979102beecccd216badccdfb02e910b3a55b2b93159393b0eb892c5d80d88f5  ./environment.txt
+91c6ea0489cd04c1f0c9472431f787f4c171172d3646daa6d46396c83483d23e  ./hardware-topology.txt
+81f0c57739ab3d5523b928a41eec7e1f9a3cfdf75723d691cbe65e9af21aab3e  ./logs/node-0/eager-repro-tp1.log
+de43e45d18c6c68a37ff06f73a3911cbd30b4deac4221b5a49dc0a16e398760b  ./npu-smi.txt
+fdcaba422f4fe32e9f835c5b03b0fa177d05a8120a5dde034e1cccdc688cb9eb  ./pip-freeze.txt
+0a6cba17789d085972aba48a8505dcf00cfccafad63c0ce41013c72b27649c85  ./repos.txt
+6bfcfaa877f8c2c31eef5ea3a6c14d363e2fd993ea7049e2c337716a33d52d6e  ./sha256sums.txt
+d684cfb327fd7c101a794a735aad6d5646d3ba9230cb92f2d30edd82ef8602f0  ./symbol-gap-matrix.md
