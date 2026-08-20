@@ -8,11 +8,11 @@
 - 日期：2026-08-20
 - 决策：项目状态、阶段任务和技术判断以 `project/glm52-w8a8-control` 中本目录为准；聊天上下文不作为长期状态。
 - 原因：项目会跨多个模型会话和执行者，聊天可能被压缩或丢失。
-- 边界：代码实现的真实状态仍以对应 GitHub Draft PR、commit 和 artifact 为原始证据；控制面只记录验收结论和链接。
+- 边界：代码实现的真实状态仍以对应 GitHub Draft PR、commit、日志/大文件及其 SHA256 和存储定位信息为原始证据；控制面只记录验收结论和链接。
 
 ## D-002：控制面发布到独立个人 fork，不写入同事代码分支
 
-- 状态：Accepted
+- 状态：Superseded by D-010
 - 日期：2026-08-20
 - 决策：控制面位于 `yanceng305-collab/vllm-plugin-FL:project/glm52-w8a8-control`，从 `main@38e7dbc` 建立。
 - 证据：当前 GitHub 身份对 `xiemingda-1002/vllm-plugin-FL` 的权限为 read/pull，没有 push 权限。
@@ -69,7 +69,26 @@
 
 - 状态：Accepted
 - 日期：2026-08-20
-- 决策：DeepSeek/执行 Codex 不得修改 `docs/glm52-w8a8-migration/`。若发现计划错误，应在执行 Draft PR 评论或证据报告中提出，由控制面维护者审查后更新。
+- 决策：DeepSeek 不得修改 `docs/glm52-w8a8-migration/`。若发现计划错误，应在执行 Draft PR 评论或证据报告中提出，由控制面维护者审查后更新。
+
+## D-010：开发 Draft PR 暂时只在本 fork 内进行
+
+- 状态：Accepted
+- 日期：2026-08-20
+- 触发阶段：Stage 0 及后续开发阶段
+- 决策：Stage 0 和后续开发 Draft PR 暂时只在 `yanceng305-collab/vllm-plugin-FL` 内创建。每阶段开始前读取 `xiemingda-1002/vllm-plugin-FL:ascend-model-migration` 的真实 HEAD，确认本 fork 同名分支与其完全一致，再从该准确 SHA 建立 Stage 分支。Stage 0 PR base 使用本 fork 的 `ascend-model-migration`；后续继续使用本 fork 内 stacked Draft PR。
+- 当前限制：不得向 `xiemingda-1002` 创建跨 fork 开发 PR。
+- 后续出口：迁移和优化成熟后，另行整理面向同事仓库的正式 PR。
+- 不变边界：`project/glm52-w8a8-control` 永远不能作为代码 PR base。
+
+## D-011：artifact URL 不是 Stage 0 硬性条件
+
+- 状态：Accepted
+- 日期：2026-08-20
+- 触发阶段：Stage 0
+- 决策：完整日志和大文件必须保存并生成 SHA256。已有现成 artifact 存储时可以记录 URL；没有时允许保存在服务器固定目录，并在 PR 中提交 artifact 索引、服务器路径、SHA256 和必要的脱敏日志片段。
+- 禁止：不得仅为上传 Stage 0 日志额外搭建 GitHub Actions 或其他 artifact 基础设施。
+- 验收边界：审查者必须能够通过索引、固定路径和 SHA256确认产物身份；只有汇总或截图仍不构成证据。
 
 ## 后续决策模板
 

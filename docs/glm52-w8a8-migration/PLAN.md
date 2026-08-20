@@ -7,7 +7,7 @@
 - GitHub control branch 是项目规划、状态和技术决策的唯一事实源。
 - 聊天记录、个人笔记、commit message 中未附证据的描述均不能替代本目录。
 - 控制面由技术规划与代码审查者维护。
-- DeepSeek/执行 Codex 只负责实现、实验和提交证据，不得直接修改本目录。
+- DeepSeek 只负责实现、实验和提交证据，不得直接修改本目录。
 - 每阶段通过真实 Draft PR、diff、环境、日志和 benchmark 验收后，才生成下一阶段详细任务。
 
 当前可执行任务只见 [`tasks/STAGE-0.md`](tasks/STAGE-0.md)。Stage 1～4 暂不提供详细执行文件。
@@ -101,8 +101,11 @@ GlmMoeDsaForCausalLM
 
 ### 4.2 代码与实验
 
-- Stage 0 的执行分支从执行时重新确认的 `ascend-model-migration` HEAD 创建。
-- 后续代码阶段使用 stacked Draft PR：每阶段从上一阶段已验收 HEAD 创建，PR base 指向上一阶段代码分支。
+- Stage 0 及后续开发 Draft PR 暂时只在 `yanceng305-collab/vllm-plugin-FL` 内进行。
+- 每个 Stage 开始前仍须读取 `xiemingda-1002/vllm-plugin-FL:ascend-model-migration` 的真实 HEAD；只有确认本 fork 的 `ascend-model-migration` 与该 SHA 完全一致后，才能从这个准确 SHA 创建 Stage 分支。
+- Stage 0 Draft PR 的 base 是本 fork 的 `ascend-model-migration`。当前不得向 `xiemingda-1002` 创建跨 fork PR。
+- 后续代码阶段继续使用 stacked Draft PR：每阶段从上一阶段已验收 HEAD 创建，PR base 指向本 fork 中上一阶段代码分支。
+- GLM-5.2 迁移和优化成熟后，再单独整理面向同事仓库的正式 PR；该正式 PR 不属于当前 Stage 0 流程。
 - control branch 永远不作为代码 PR base。
 - 不允许自动合并、force-push 已验收分支或把多个阶段 squash 成不可审计的大提交。
 
@@ -167,9 +170,11 @@ Stage 0 验收后才能决定 Stage 1 的准确文件 allowlist。
 | 正确性 | 固定 prompt、token IDs/hash、参考实现比较、NaN/Inf/乱码/异常重复检查 |
 | 稳定性 | 冷启动、连续请求、失败数、进程重启、HBM/RSS 变化 |
 | 性能阶段 | workload manifest、raw JSON、重复次数、TTFT/TPOT/ITL/E2E、吞吐、profiler |
-| 原始产物 | 每节点日志、rank 日志、npu-smi、trace、artifact URL 和 SHA256 |
+| 原始产物 | 每节点日志、rank 日志、npu-smi、trace、SHA256，以及存储定位信息：已有 artifact 存储时记录 URL，否则记录服务器固定目录、artifact 索引和必要的脱敏片段 |
 
 PR 中只有截图、汇总表、commit body 自述或手工复制的数字，不构成验收证据。
+
+Stage 0 不要求为了日志上传新建 GitHub Actions 或其他 artifact 基础设施。完整日志和大文件必须保存并生成 SHA256，但 artifact URL 不是硬性完成条件。
 
 ## 7. Benchmark 隔离规则
 

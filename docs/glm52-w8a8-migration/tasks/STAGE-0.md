@@ -3,7 +3,7 @@
 ## 任务身份
 
 - Task ID：`GLM52-W8A8-STAGE-0`
-- 执行者：DeepSeek 或明确授权的执行 Codex
+- 执行者：DeepSeek
 - 控制面维护者：技术规划与代码审查者
 - 当前状态：Ready
 - 生产源码修改：禁止
@@ -29,22 +29,30 @@
    ```
 
 2. 记录返回 SHA。审计时 SHA 是 `82f3e7181cda8b51b5c0de8dd3450f5e779df363`，但禁止假设它仍未变化。
-3. 从这个准确 SHA 创建：
+3. 同时读取本 fork 的基线：
+
+   ```bash
+   git ls-remote https://github.com/yanceng305-collab/vllm-plugin-FL.git \
+     refs/heads/ascend-model-migration
+   ```
+
+4. 两个远端 SHA 必须完全一致。若本 fork 落后，只能进行可证明的 fast-forward 同步；若已分叉或无法安全对齐，停止任务并报告，不得 force-push、merge 或自行改写基线。
+5. 从这个已经对齐的准确 SHA，在 `yanceng305-collab/vllm-plugin-FL` 创建：
 
    ```text
    audit/glm52-w8a8-stage0-gap
    ```
 
-4. 如果没有同事 fork 的 push 权限，在自己的 fork 创建分支并向
-   `xiemingda-1002/vllm-plugin-FL:ascend-model-migration` 开跨 fork Draft PR。
-5. Draft PR 标题建议：
+6. Draft PR 必须创建在 `yanceng305-collab/vllm-plugin-FL` 内，base 使用该仓库的 `ascend-model-migration`。当前不得向 `xiemingda-1002` 创建跨 fork PR。
+7. Draft PR 标题建议：
 
    ```text
    [Audit][GLM-5.2] Freeze W8A8 Ascend gap and eager repro
    ```
 
-6. PR 必须保持 Draft，不得合并。
-7. control branch `project/glm52-w8a8-control` 不是本 PR 的 base。
+8. PR 必须保持 Draft，不得合并。
+9. control branch `project/glm52-w8a8-control` 不是本 PR 的 base。
+10. 迁移和优化成熟后，面向同事仓库的正式 PR 将单独整理；不属于本任务。
 
 ## 3. 允许修改范围
 
@@ -213,11 +221,19 @@ stage-0/
   sha256sums.txt
 ```
 
+完整日志和大文件必须保存，并包含在 `sha256sums.txt` 中。存储规则：
+
+- 如果已经有现成 artifact 存储，可以上传并记录 URL；
+- 如果没有，允许保存在服务器固定目录；
+- 使用服务器目录时，PR 中必须提交 artifact 索引、固定绝对路径、SHA256、保留责任/期限说明和必要的脱敏日志片段；
+- artifact URL 不是 Stage 0 完成的硬性条件；
+- 不得为了上传 Stage 0 日志额外搭建 GitHub Actions、workflow 或其他 artifact 基础设施。
+
 PR body 必须包含：
 
 - base/head SHA；
 - 完整命令；
-- artifact URL 和 SHA256；
+- artifact 存储定位信息和 SHA256：现成存储 URL，或服务器固定目录与 artifact 索引；
 - 第一次失败或成功点；
 - 已确认事实、推断和未知项；
 - Stage 1 候选文件 allowlist；
@@ -230,11 +246,13 @@ PR body 必须包含：
 Stage 0 只有同时满足以下条件才算完成：
 
 - Draft PR 已创建且保持 Draft；
-- 分支基于准确、可验证的 `ascend-model-migration` SHA；
+- Draft PR 位于 `yanceng305-collab/vllm-plugin-FL`，base 为本 fork 的 `ascend-model-migration`，没有向 `xiemingda-1002` 创建跨 fork PR；
+- 本 fork `ascend-model-migration` 与执行时读取的上游 SHA 完全一致，Stage 分支基于这个准确、可验证的 SHA；
 - 生产源码没有改动；
 - 环境和 checkpoint 身份可复现；
 - 五项 shared Indexer 不变量矩阵完整；
 - 最小 eager 命令和所有节点日志完整；
+- 完整日志和大文件已有 SHA256；提供现成 artifact URL，或服务器固定目录、artifact 索引和必要的脱敏片段；
 - 首次失败定位到具体符号，或未经修改成功的证据可复验；
 - 提供由证据支持的 Stage 1 候选 allowlist；
 - 未提前启用 Stage 1～4 特性。
